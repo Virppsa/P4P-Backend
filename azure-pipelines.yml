@@ -28,6 +28,14 @@ steps:
   - script: docker-compose -f docker-compose.yml up -d
     displayName: 'Start PostgreSQL database in Docker'
 
+  # Update the database
+  - task: DotNetCoreCLI@2
+    displayName: 'Update Database'
+    inputs:
+      command: 'custom'
+      custom: 'ef'
+      arguments: 'database update --project P4P/P4P.csproj'  
+
   - task: DotNetCoreCLI@2
     displayName: 'Build'
     inputs:
