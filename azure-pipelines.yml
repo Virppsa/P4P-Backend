@@ -28,6 +28,14 @@ steps:
   - script: docker-compose -f docker-compose.yml up -d
     displayName: 'Start PostgreSQL database in Docker'
 
+    # Install EF Tools
+  - task: DotNetCoreCLI@2
+    displayName: 'Install EF Tools'
+    inputs:
+      command: 'install'
+      packagesToInstall: 'dotnet-ef'
+      versioningScheme: 'latestMajor'  
+
   # Update the database
   - task: DotNetCoreCLI@2
     displayName: 'Update Database'
@@ -42,6 +50,20 @@ steps:
       command: 'build'
       arguments: '--configuration $(buildConfiguration)'
       projects: '**/*.csproj'
+  
+    # Install EF Tools
+  - task: DotNetCoreCLI@2
+    displayName: 'Install EF Tools'
+    inputs:
+      command: 'install'
+      packagesToInstall: 'dotnet-ef'
+      versioningScheme: 'latestMajor'
+
+  # Update the database
+  - script: |
+      echo "##vso[task.prependpath]$HOME/.dotnet/tools"
+      dotnet ef database update --project P4P/P4P.csproj
+    displayName: 'Update Database'
 
   - task: DotNetCoreCLI@2
     displayName: 'Test'
