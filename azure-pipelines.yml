@@ -35,19 +35,20 @@ steps:
       arguments: '--configuration $(buildConfiguration)'
       projects: '**/*.csproj'
   
-    # Install EF Tools
+  # Install EF Tools
   - task: DotNetCoreCLI@2
     displayName: 'Install EF Tools'
     inputs:
-      command: 'install'
-      packagesToInstall: 'dotnet-ef'
-      versioningScheme: 'latestMajor'
+      command: 'custom'
+      custom: 'tool'
+      arguments: 'install --global dotnet-ef'
 
   # Update the database
   - script: |
       echo "##vso[task.prependpath]$HOME/.dotnet/tools"
-      dotnet ef database update --project P4P/P4P.csproj
+      dotnet ef database update
     displayName: 'Update Database'
+    workingDirectory: 'P4P'
 
   - task: DotNetCoreCLI@2
     displayName: 'Test'
