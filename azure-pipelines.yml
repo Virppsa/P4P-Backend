@@ -19,6 +19,14 @@ steps:
     inputs:
       command: 'restore'
       projects: '**/*.csproj'
+  
+    # Install Docker Compose
+  - script: sudo apt-get update && sudo apt-get install -y docker-compose
+    displayName: 'Install Docker Compose'
+
+  # Launch the PostgreSQL database using the docker-compose.yml file
+  - script: docker-compose -f P4P-Backend/docker-compose.yml up -d
+    displayName: 'Start PostgreSQL database in Docker'
 
   - task: DotNetCoreCLI@2
     displayName: 'Build'
@@ -46,11 +54,3 @@ steps:
     inputs:
       pathtoPublish: '$(Build.ArtifactStagingDirectory)/WebApp'
       artifactName: 'WebApp'
-
-  # Install Docker Compose
-  - script: sudo apt-get update && sudo apt-get install -y docker-compose
-    displayName: 'Install Docker Compose'
-
-  # Launch the PostgreSQL database using the docker-compose.yml file
-  - script: docker-compose -f P4P-Backend/docker-compose.yml up -d
-    displayName: 'Start PostgreSQL database in Docker'
