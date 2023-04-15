@@ -1,8 +1,3 @@
-# ASP.NET Core (.NET Framework)
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
   - master
 
@@ -44,7 +39,7 @@ steps:
     inputs:
       command: 'publish'
       arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/WebApp'
-      projects: '**/*.csproj'
+      projects: 'P4P-Backend/*.csproj'
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifacts'
@@ -52,6 +47,10 @@ steps:
       pathtoPublish: '$(Build.ArtifactStagingDirectory)/WebApp'
       artifactName: 'WebApp'
 
+  # Install Docker Compose
+  - script: sudo apt-get update && sudo apt-get install -y docker-compose
+    displayName: 'Install Docker Compose'
+
   # Launch the PostgreSQL database using the docker-compose.yml file
-  - script: docker-compose up -d
+  - script: docker-compose -f P4P-Backend/docker-compose.yml up -d
     displayName: 'Start PostgreSQL database in Docker'
