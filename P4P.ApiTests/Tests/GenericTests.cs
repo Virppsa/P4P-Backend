@@ -20,6 +20,6 @@ public class GenericTests : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.GetAsync(url);
 
         response.EnsureSuccessStatusCode();
-        Assert.Equal("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
+        Assert.Equal("application/json; charset=utf-8; ver=1.0", response.Content.Headers.ContentType.ToString());
     }
 }
